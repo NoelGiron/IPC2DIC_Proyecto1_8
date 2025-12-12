@@ -7,3 +7,6 @@ class contenedor:
         self.ram_cont = ram_cont
         self.almacenamiento_cont = almacenamiento_cont
         self.puerto = puerto
+
+    def __str__(self):
+        return f"ID: {self.id_cont} Nombre: {self.nombre_cont} Imagen: {self.img_cont} CPU: {self.cpu_cont} RAM: {self.ram_cont} Almacenamiento: {self.almacenamiento_cont} Puerto: {self.puerto}"

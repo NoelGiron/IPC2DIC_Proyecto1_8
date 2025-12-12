@@ -7,3 +7,6 @@ class maquina_virtual:
         self.ram_vm = ram_vm
         self.almacenamiento = almacenamiento
         self.ip_vm = ip_mv
+
+    def __str__(self):
+        return f"ID: {self.id_vm} Centro asignado: {self.centro_asig} Sistema Operativo: {self.os} CPU: {self.cpu_vm} RAM: {self.ram_vm} Almacenamiento: {self.almacenamiento} IP: {self.ip_vm}"
