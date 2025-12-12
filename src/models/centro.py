@@ -7,3 +7,6 @@ class centro:
         self.cpu = cpu
         self.ram = ram
         self.almacenamiento = almacenamiento
+
+    def __str__(self):
+        return f"ID: {self.id_cd} Nombre: {self.nombre} País: {self.pais} Ciudad: {self.ciudad} CPU: {self.cpu} RAM: {self.ram} Almacenamiento: {self.almacenamiento}"
