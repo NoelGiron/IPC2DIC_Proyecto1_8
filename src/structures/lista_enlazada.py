@@ -24,25 +24,25 @@ class lista_enlazada:
             actual.siguiente = nuevo
         self.size += 1
 
-        def recorrer(self, indice):
-            actual = self.primero
-            contador = 0
-            
-            while actual != None:
-                if contador == indice:
-                    return actual.dato
-                actual = actual.siguiente
-                contador += 1
-            return None
+    def recorrer(self, indice):
+        actual = self.primero
+        contador = 0
+        
+        while actual != None:
+            if contador == indice:
+                return actual.dato
+            actual = actual.siguiente
+            contador += 1
+        return None
 
-        def imprimir(self):
-            if self.primero == None:
-                print("La lista esta vacia")
-                return
-            
-            actual = self.primero
-            while actual.siguiente != None:
-                print(actual.dato)
-                actual = actual.siguiente
+    def imprimir(self):
+        if self.primero == None:
+            print("La lista esta vacia")
+            return
+        
+        actual = self.primero
+        while actual.siguiente != None:
             print(actual.dato)
+            actual = actual.siguiente
+        print(actual.dato)
             
