@@ -101,7 +101,7 @@
             <ram>8</ram>
             <almacenamiento>60</almacenamiento>
         </instruccion>
-            <instruccion tipo="migrarVM">
+        <instruccion tipo="migrarVM">
             <vmId>VM001</vmId>
             <centroOrigen>DC001</centroOrigen>
             <centroDestino>DC002</centroDestino>
