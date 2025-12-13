@@ -2,7 +2,7 @@ import xml.etree.ElementTree as ET
 
 from ..structures.lista_enlazada import lista_enlazada
 from ..models.centro import centro
-#from models.maquina_virtual import maquina_virtual
+from ..models.maquina_virtual import maquina_virtual
 #from models.contenedor import contenedor
 #from models.solicitud import solicitud
 #from models.crear_vm import crear_vm
@@ -31,10 +31,18 @@ class xml_lector:
             centros_elemento = configuracion.find('centrosDatos')
         
             if centros_elemento:
-                print(f"\nLeyendo centros")
+                print(f"\nLeyendo Centros de datos")
                 self.leer_centros(centros_elemento)
             else:
                 print("ADVERTENCIA: No se encontró 'centrosDatos'")
+
+            maquinas_elemento = configuracion.find('maquinasVirtuales')
+
+            if maquinas_elemento:
+                print(f"\nLeyendo Maquinas virtuales")
+                self.leer_maquinas_virtuales(maquinas_elemento)
+            else:
+                print("ADVERTENCIA: No se encontró 'naquinasVirtuales'")
 
             self.datos_cargados = True
             return True
@@ -77,6 +85,44 @@ class xml_lector:
                 )
                 self.centros.insertar(nuevo_centro)
                 print(f"Centro '{centro_nombre}' procesado")
+
+            except Exception as e:
+                print(f"Error al procesar los centros: {e}")
+
+    def leer_maquinas_virtuales(self, lista_elementos):
+
+        if lista_elementos is None:
+            print("ERROR: lista_elementos es None")
+            return
+        
+        maquinas_encontradas = lista_elementos.findall('vm')
+        
+        for elemento in maquinas_encontradas:
+            try:
+                mv_id = elemento.get('id')
+                mv_centro = elemento.get('centroAsignado')
+
+                mv_os = elemento.find('sistemaOperativo').text
+
+                mv_recursos = elemento.find('recursos')
+                mv_cpu = mv_recursos.find('cpu').text
+                mv_ram = mv_recursos.find('ram').text
+                mv_almacenamiento = mv_recursos.find('almacenamiento').text
+
+                mv_ip = elemento.find('ip').text
+
+                nuevo_mv = maquina_virtual(
+                    id_vm = mv_id,
+                    centro_asig = mv_centro,
+                    os = mv_os,
+                    cpu_vm = mv_cpu,
+                    ram_vm = mv_ram,
+                    almacenamiento = mv_almacenamiento,
+                    ip_mv =  mv_ip
+
+                )
+                self.maquinas_virtuales.insertar(nuevo_mv)
+                print(f"Maquina virtual '{mv_id}' procesado")
 
             except Exception as e:
                 print(f"Error al procesar los centros: {e}")
