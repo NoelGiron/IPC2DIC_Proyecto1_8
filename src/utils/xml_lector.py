@@ -4,7 +4,7 @@ from ..structures.lista_enlazada import lista_enlazada
 from ..models.centro import centro
 from ..models.maquina_virtual import maquina_virtual
 #from models.contenedor import contenedor
-#from models.solicitud import solicitud
+from ..models.solicitud import solicitud
 #from models.crear_vm import crear_vm
 #from models.migrar_vm import migrar_vm
 
@@ -43,6 +43,14 @@ class xml_lector:
                 self.leer_maquinas_virtuales(maquinas_elemento)
             else:
                 print("ADVERTENCIA: No se encontró 'naquinasVirtuales'")
+
+            solicitudes_elemento = configuracion.find('solicitudes')
+        
+            if solicitudes_elemento:
+                print(f"\nLeyendo Solicitudes")
+                self.leer_solicitudes(solicitudes_elemento)
+            else:
+                print("ADVERTENCIA: No se encontró 'solicitudes'")
 
             self.datos_cargados = True
             return True
@@ -123,6 +131,43 @@ class xml_lector:
                 )
                 self.maquinas_virtuales.insertar(nuevo_mv)
                 print(f"Maquina virtual '{mv_id}' procesado")
+
+            except Exception as e:
+                print(f"Error al procesar los centros: {e}")
+    
+    def leer_solicitudes(self, lista_elementos):
+        if lista_elementos is None:
+            print("ERROR: lista_elementos es None")
+
+        solicitudes_encontradas = lista_elementos.findall('solicitud')
+
+        for elemento in solicitudes_encontradas:
+            try:
+                solicitud_id = elemento.get('id')
+                solicitud_centro = elemento.find('cliente').text
+                solicitud_tipo = elemento.find('tipo').text
+                solicitud_prioridad = elemento.find('prioridad').text
+
+                solicitud_recursos = elemento.find('recursos')
+                solicitud_cpu = solicitud_recursos.find('cpu').text
+                solicitud_ram = solicitud_recursos.find('ram').text
+                solicitud_almacenamiento = solicitud_recursos.find('almacenamiento').text
+
+                solicitud_tiempo = elemento.find('tiempoEstimado').text
+
+                nueva_solicitud = solicitud(
+                    id_solic = solicitud_id,
+                    cliente = solicitud_centro,
+                    tipo_solic = solicitud_tipo,
+                    prioridad = solicitud_prioridad,
+                    cpu_solic = solicitud_cpu,
+                    ram_solic = solicitud_ram,
+                    almacenamiento_solic = solicitud_almacenamiento,
+                    tiempo_solic = solicitud_tiempo
+
+                )
+                self.solicitudes.insertar(nueva_solicitud)
+                print(f"Solicitudes '{solicitud_id}' procesado")
 
             except Exception as e:
                 print(f"Error al procesar los centros: {e}")

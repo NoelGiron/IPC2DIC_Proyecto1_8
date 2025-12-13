@@ -24,6 +24,8 @@ def main():
 
                 gestor_cloudsync.leer_xml(archivo)
                 gestor_cloudsync.centros.imprimir()
+                gestor_cloudsync.maquinas_virtuales.imprimir()
+                gestor_cloudsync.solicitudes.imprimir()
 
                 
             elif opcion == "2":
