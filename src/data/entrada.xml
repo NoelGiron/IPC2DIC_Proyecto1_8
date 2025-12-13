@@ -106,7 +106,7 @@
             <centroOrigen>DC001</centroOrigen>
             <centroDestino>DC002</centroDestino>
             </instruccion>
-            <instruccion tipo="procesarSolicitudes">
+        <instruccion tipo="procesarSolicitudes">
             <cantidad>2</cantidad>
         </instruccion>
     </instrucciones>
