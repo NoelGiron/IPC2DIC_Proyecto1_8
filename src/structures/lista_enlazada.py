@@ -41,8 +41,7 @@ class lista_enlazada:
             return
         
         actual = self.primero
-        while actual.siguiente != None:
+        while actual != None:  
             print(actual.dato)
             actual = actual.siguiente
-        print(actual.dato)
             

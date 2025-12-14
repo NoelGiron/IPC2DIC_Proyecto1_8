@@ -3,7 +3,7 @@ from src.utils.xml_lector import xml_lector
 gestor_cloudsync = xml_lector()
 
 def menu_principal():
-    print("--------CloudSync Managaer-----------")
+    print("\n--------CloudSync Managaer-----------")
     print("1) Cargar archivo XML")
     print("2) Gestión de centro de datos")
     print("3) Gestión de maquinas virtuales")
@@ -23,10 +23,10 @@ def main():
                 archivo = input("\nIngrese el nombre del archivo:")
 
                 gestor_cloudsync.leer_xml(archivo)
-                gestor_cloudsync.centros.imprimir()
-                gestor_cloudsync.maquinas_virtuales.imprimir()
-                gestor_cloudsync.solicitudes.imprimir()
-
+                # gestor_cloudsync.centros.imprimir()
+                # gestor_cloudsync.maquinas_virtuales.imprimir()
+                # gestor_cloudsync.solicitudes.imprimir()
+                # gestor_cloudsync.instrucciones.imprimir()
                 
             elif opcion == "2":
                print("\nen procesos")

@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ET
 from ..structures.lista_enlazada import lista_enlazada
 from ..models.centro import centro
 from ..models.maquina_virtual import maquina_virtual
-#from models.contenedor import contenedor
+from ..models.contenedor import contenedor
 from ..models.solicitud import solicitud
 from ..models.crear_vm import crear_vm
 from ..models.migrar_vm import migrar_vm
@@ -137,6 +137,36 @@ class xml_lector:
                     almacenamiento = mv_almacenamiento,
                     ip_mv =  mv_ip
                 )
+
+                contenedores_elementos = elemento.find('contenedores')
+                if contenedores_elementos is not None:
+                    contenedores_encontrados = contenedores_elementos.findall('contenedor')
+
+                    for contenedor_elemento in contenedores_encontrados:
+                        try:
+                            cont_id = contenedor_elemento.get('id')
+                            cont_nombre = contenedor_elemento.find('nombre').text
+                            cont_img = contenedor_elemento.find('imagen').text
+
+                            cont_recursos = contenedor_elemento.find('recursos')
+                            cont_cpu = cont_recursos.find('cpu').text
+                            cont_ram = cont_recursos.find('ram').text
+
+                            cont_puerto = contenedor_elemento.find('puerto').text
+
+                            nuevo_contenedor = contenedor(
+                                id_cont = cont_id,
+                                nombre_cont = cont_nombre,
+                                img_cont = cont_img,
+                                cpu_cont = cont_cpu,
+                                ram_cont = cont_ram,
+                                puerto = cont_puerto
+                            )
+                            nuevo_mv.lista_contenedores.insertar(nuevo_contenedor)
+                            print(f"Contenedor: {cont_id} creado en VM: {mv_id}")
+
+                        except Exception as e:
+                            print(f"Error al procesar el contenedor: {e}")
 
                 self.maquinas_virtuales.insertar(nuevo_mv)
                 print(f"Maquina virtual '{mv_id}' procesadas")
