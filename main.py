@@ -23,10 +23,6 @@ def main():
                 archivo = input("\nIngrese el nombre del archivo:")
 
                 gestor_cloudsync.leer_xml(archivo)
-                # gestor_cloudsync.centros.imprimir()
-                # gestor_cloudsync.maquinas_virtuales.imprimir()
-                # gestor_cloudsync.solicitudes.imprimir()
-                # gestor_cloudsync.instrucciones.imprimir()
                 
             elif opcion == "2":
                print("\nen procesos")
