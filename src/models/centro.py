@@ -4,9 +4,19 @@ class centro:
         self.nombre = nombre
         self.pais = pais
         self.ciudad = ciudad
-        self.cpu = cpu
-        self.ram = ram
-        self.almacenamiento = almacenamiento
+
+        self.cpu = int(cpu)
+        self.ram = int(ram)
+        self.almacenamiento = int(almacenamiento)
+
+        self.cpuDisp = int(cpu)
+        self.ramDisp = int(ram)
+        self.almDisp = int(almacenamiento)
 
     def __str__(self):
-        return f"ID: {self.id_cd} Nombre: {self.nombre} País: {self.pais} Ciudad: {self.ciudad} CPU: {self.cpu} RAM: {self.ram} Almacenamiento: {self.almacenamiento}"
+        return (
+            f"ID: {self.id_cd} | {self.nombre} | "
+            f"CPU: {self.cpuDisp}/{self.cpu} | "
+            f"RAM: {self.ramDisp}/{self.ram} | "
+            f"ALM: {self.almDisp}/{self.almacenamiento}"
+        )

@@ -1,4 +1,7 @@
 from src.utils.xml_lector import xml_lector
+from src.dataCenter.choice import eleccionCD
+from src.virtualMachine.opcinesMV import eleccionMV
+from src.container.choiceContainer import eleccionCN
 
 gestor_cloudsync = xml_lector()
 
@@ -25,13 +28,13 @@ def main():
                 gestor_cloudsync.leer_xml(archivo)
                 
             elif opcion == "2":
-               print("\nen procesos")
+               eleccionCD(gestor_cloudsync.centros)
                 
             elif opcion == "3":
-                print("\nen procesos")
+                eleccionMV(gestor_cloudsync.maquinas_virtuales,gestor_cloudsync.centros)
                 
             elif opcion == "4":
-                print("\nen procesos")
+                eleccionCN()
                 
             elif opcion == "5":
                 print("\nen procesos")
