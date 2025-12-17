@@ -1,4 +1,5 @@
 from ..container.desplegarC import desplegarContenedor
+from ..container.listarC import listarContenedoresVM
 
 def opcionesCN():
     print("\n--------Gestión de centro de datos-----------")
@@ -17,8 +18,8 @@ def eleccionCN(listaVM):
             
             if opcion == "1":
                 idVM = input("ID de la VM: ")
-                idCont = input("ID del contenedor: ")
-                nombre = input("Nombre del contenedor: ")
+                idCont = input("ID contenedor: ")
+                nombre = input("Nombre contenedor: ")
                 imagen = input("Imagen: ")
                 cpu = input("CPU requerida: ")
                 ram = input("RAM requerida: ")
@@ -37,7 +38,7 @@ def eleccionCN(listaVM):
 
                 print(msg)
             elif opcion == "2":
-                print("\nlistar")
+                listarContenedoresVM(listaVM)
             elif opcion == "3":
                 print("\ncambiar")
             elif opcion == "4":
