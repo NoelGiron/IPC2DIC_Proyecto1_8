@@ -2,6 +2,7 @@ from src.utils.xml_lector import xml_lector
 from src.dataCenter.choice import eleccionCD
 from src.virtualMachine.opcinesMV import eleccionMV
 from src.container.choiceContainer import eleccionCN
+from src.solicitudes.opcionesS import eleccionS
 
 gestor_cloudsync = xml_lector()
 
@@ -11,8 +12,8 @@ def menu_principal():
     print("2) Gestión de centro de datos")
     print("3) Gestión de maquinas virtuales")
     print("4) Gestión de contenedores")
-    print("5) Reportes en Graphviz")
-    print("6) Historial de operaciones")
+    print("5) Gestión de solicitudes")
+    print("6) General XML Salida")
     print("7) Salir")
 
 def main():
@@ -37,7 +38,7 @@ def main():
                 eleccionCN(gestor_cloudsync.maquinas_virtuales)
                 
             elif opcion == "5":
-                print("Gestion de solicitudes")
+                eleccionS()
                 
             elif opcion == "6":
                 print("General XML Salida")
