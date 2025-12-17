@@ -34,7 +34,7 @@ def main():
                 eleccionMV(gestor_cloudsync.maquinas_virtuales,gestor_cloudsync.centros)
                 
             elif opcion == "4":
-                eleccionCN()
+                eleccionCN(gestor_cloudsync.maquinas_virtuales)
                 
             elif opcion == "5":
                 print("\nen procesos")

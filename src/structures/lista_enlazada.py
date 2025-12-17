@@ -160,3 +160,25 @@ class lista_enlazada:
 
         print(f"VM {idVM} migrada correctamente")
         return True
+    
+    def desplegarContenedorVM(self, idVM, contenedor):
+        actual = self.cabeza
+
+        while actual:
+            vm = actual.dato
+            if vm.id_vm == idVM:
+                if vm.puede_desplegar_contenedor(
+                    contenedor.cpu_cont,
+                    contenedor.ram_cont
+                ):
+                    vm.desplegar_contenedor(contenedor)
+                    print("Contenedor desplegado.")
+                    return True
+                else:
+                    print("La VM no tiene recursos suficientes.")
+                    return False
+
+            actual = actual.siguiente
+
+        print("No se encontró la máquina virtual.")
+        return False
