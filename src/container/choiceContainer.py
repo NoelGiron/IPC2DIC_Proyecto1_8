@@ -1,6 +1,8 @@
 from ..container.desplegarC import desplegarContenedor
 from ..container.listarC import listarContenedoresVM
 from ..container.cambiarEstadoC import cambiar_estado_contenedor
+from ..container.eliminarC import eliminarContenedorVM
+
 
 def opcionesCN():
     print("\n--------Gestión de centro de datos-----------")
@@ -75,7 +77,15 @@ def eleccionCN(listaVM):
                 print(msg)
 
             elif opcion == "4":
-                print("\neliminar")
+                idVM = input("ID de la VM (o 'x' para volver): ").strip()
+                if idVM.lower() == 'x':
+                    continue
+
+                idCont = input("ID del contenedor: ").strip()
+
+                ok, msg = eliminarContenedorVM(listaVM, idVM, idCont)
+                print(msg)
+
             elif opcion == "5":
                 print("\nmenu principal")
                 break

@@ -51,3 +51,25 @@ class maquina_virtual:
                 return actual.dato
             actual = actual.siguiente
         return None
+    
+    def eliminarContenedor(self, idCont):
+        actual = self.lista_contenedores.primero
+        anterior = None
+
+        while actual is not None:
+            if actual.dato.id_cont == idCont:
+                self.cpu_vm += int(actual.dato.cpu_cont)
+                self.ram_vm += int(actual.dato.ram_cont)
+
+                if anterior is None:
+                    self.lista_contenedores.primero = actual.siguiente
+                else:
+                    anterior.siguiente = actual.siguiente
+
+                self.lista_contenedores.size -= 1
+                return True
+
+            anterior = actual
+            actual = actual.siguiente
+
+        return False

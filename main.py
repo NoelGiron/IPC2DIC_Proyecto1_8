@@ -37,10 +37,10 @@ def main():
                 eleccionCN(gestor_cloudsync.maquinas_virtuales)
                 
             elif opcion == "5":
-                print("\nen procesos")
+                print("Gestion de solicitudes")
                 
             elif opcion == "6":
-                print("\nen procesos")
+                print("General XML Salida")
                 
             elif opcion == "7":
                 print("\n¡Hasta luego!")
