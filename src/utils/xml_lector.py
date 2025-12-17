@@ -9,6 +9,7 @@ from ..models.crear_vm import crear_vm
 from ..models.migrar_vm import migrar_vm
 from ..models.procesar import procesar
 
+
 class xml_lector:
     def __init__(self):
         self.centros = lista_enlazada()
@@ -26,194 +27,135 @@ class xml_lector:
 
             configuracion = root.find('configuracion')
             if configuracion is None:
-                print("ERROR: No se encontró 'configuracion'")
+                print("No se encontró la sección de configuración")
                 return False
 
             centros_elemento = configuracion.find('centrosDatos')
-        
             if centros_elemento:
-                print(f"\nLeyendo Centros de datos")
+                print("\nCargando centros de datos...")
                 self.leer_centros(centros_elemento)
             else:
-                print("ADVERTENCIA: No se encontró 'centrosDatos'")
+                print("Advertencia: no hay centros de datos definidos")
 
             maquinas_elemento = configuracion.find('maquinasVirtuales')
-
             if maquinas_elemento:
-                print(f"\nLeyendo Maquinas virtuales")
+                print("\nCargando máquinas virtuales...")
                 self.leer_maquinas_virtuales(maquinas_elemento)
             else:
-                print("ADVERTENCIA: No se encontró 'maquinasVirtuales'")
+                print("Advertencia: no hay máquinas virtuales definidas")
 
             solicitudes_elemento = configuracion.find('solicitudes')
-        
             if solicitudes_elemento:
-                print(f"\nLeyendo Solicitudes")
+                print("\nCargando solicitudes...")
                 self.leer_solicitudes(solicitudes_elemento)
             else:
-                print("ADVERTENCIA: No se encontró 'solicitudes'")
+                print("Advertencia: no hay solicitudes")
 
             instrucciones_elemento = root.find('instrucciones')
-
             if instrucciones_elemento:
-                print(f"\nLeyendo instrucciones")
+                print("\nCargando instrucciones...")
                 self.leer_instrucciones(instrucciones_elemento)
             else:
-                print("ADVERTECNIA: No se encontró 'instrucciones'")
+                print("Advertencia: no hay instrucciones")
 
             self.datos_cargados = True
+            print("\nArchivo XML cargado correctamente")
             return True
-        
+
         except Exception as e:
-            print(f"Error al leer el archivo: {e}")
+            print(f"No se pudo leer el archivo: {e}")
             return False
 
     def leer_centros(self, lista_elementos):
-
-        if lista_elementos is None:
-            print("ERROR: lista_elementos es None")
-            return
-        
         centros_encontrados = lista_elementos.findall('centro')
-        
+
         for elemento in centros_encontrados:
             try:
-                centro_id = elemento.get('id')
-                centro_nombre = elemento.get('nombre')
-
-                centro_ubicacion = elemento.find('ubicacion')
-                centro_pais = centro_ubicacion.find('pais').text
-                centro_ciudad = centro_ubicacion.find('ciudad').text
-
-                centro_capacidad = elemento.find('capacidad')
-                centro_cpu = centro_capacidad.find('cpu').text
-                centro_ram = centro_capacidad.find('ram').text
-                centro_almacenamiento = centro_capacidad.find('almacenamiento').text
-
                 nuevo_centro = centro(
-                    id_cd = centro_id,
-                    nombre = centro_nombre,
-                    pais = centro_pais,
-                    ciudad = centro_ciudad,
-                    cpu = centro_cpu,
-                    ram = centro_ram,
-                    almacenamiento = centro_almacenamiento
+                    id_cd=elemento.get('id'),
+                    nombre=elemento.get('nombre'),
+                    pais=elemento.find('ubicacion/pais').text,
+                    ciudad=elemento.find('ubicacion/ciudad').text,
+                    cpu=elemento.find('capacidad/cpu').text,
+                    ram=elemento.find('capacidad/ram').text,
+                    almacenamiento=elemento.find('capacidad/almacenamiento').text
                 )
 
                 self.centros.insertar(nuevo_centro)
-                print(f"Centro '{centro_nombre}' procesado")
+                print(f"Centro '{nuevo_centro.nombre}' agregado")
 
             except Exception as e:
-                print(f"Error al procesar los centros: {e}")
+                print(f"No se pudo cargar un centro: {e}")
 
     def leer_maquinas_virtuales(self, lista_elementos):
-
-        if lista_elementos is None:
-            print("ERROR: lista_elementos es None")
-            return
-        
         maquinas_encontradas = lista_elementos.findall('vm')
-        
+
         for elemento in maquinas_encontradas:
             try:
                 mv_id = elemento.get('id')
                 mv_centro = elemento.get('centroAsignado')
 
-                mv_os = elemento.find('sistemaOperativo').text
-
-                mv_recursos = elemento.find('recursos')
-                mv_cpu = mv_recursos.find('cpu').text
-                mv_ram = mv_recursos.find('ram').text
-                mv_almacenamiento = mv_recursos.find('almacenamiento').text
-
-                mv_ip = elemento.find('ip').text
-
                 nuevo_mv = maquina_virtual(
-                    id_vm = mv_id,
-                    centro_asig = mv_centro,
-                    os = mv_os,
-                    cpu_vm = mv_cpu,
-                    ram_vm = mv_ram,
-                    almacenamiento = mv_almacenamiento,
-                    ip_mv =  mv_ip
+                    id_vm=mv_id,
+                    centro_asig=mv_centro,
+                    os=elemento.find('sistemaOperativo').text,
+                    cpu_vm=elemento.find('recursos/cpu').text,
+                    ram_vm=elemento.find('recursos/ram').text,
+                    almacenamiento=elemento.find('recursos/almacenamiento').text,
+                    ip_mv=elemento.find('ip').text
                 )
+
+                centro_actual = self.centros.buscarporID(mv_centro)
+
+                if centro_actual:
+                    centro_actual.cpuDisp -= int(nuevo_mv.cpu_vm)
+                    centro_actual.ramDisp -= int(nuevo_mv.ram_vm)
+                    centro_actual.almDisp -= int(nuevo_mv.almacenamiento)
+                else:
+                    print(f"No se encontró el centro {mv_centro} para la VM {mv_id}")
 
                 contenedores_elementos = elemento.find('contenedores')
                 if contenedores_elementos is not None:
-                    contenedores_encontrados = contenedores_elementos.findall('contenedor')
-
-                    for contenedor_elemento in contenedores_encontrados:
-                        try:
-                            cont_id = contenedor_elemento.get('id')
-                            cont_nombre = contenedor_elemento.find('nombre').text
-                            cont_img = contenedor_elemento.find('imagen').text
-
-                            cont_recursos = contenedor_elemento.find('recursos')
-                            cont_cpu = cont_recursos.find('cpu').text
-                            cont_ram = cont_recursos.find('ram').text
-
-                            cont_puerto = contenedor_elemento.find('puerto').text
-
-                            nuevo_contenedor = contenedor(
-                                id_cont = cont_id,
-                                nombre_cont = cont_nombre,
-                                img_cont = cont_img,
-                                cpu_cont = cont_cpu,
-                                ram_cont = cont_ram,
-                                puerto = cont_puerto
-                            )
-                            nuevo_mv.lista_contenedores.insertar(nuevo_contenedor)
-                            print(f"Contenedor: {cont_id} creado en VM: {mv_id}")
-
-                        except Exception as e:
-                            print(f"Error al procesar el contenedor: {e}")
+                    for contenedor_elemento in contenedores_elementos.findall('contenedor'):
+                        nuevo_contenedor = contenedor(
+                            id_cont=contenedor_elemento.get('id'),
+                            nombre_cont=contenedor_elemento.find('nombre').text,
+                            img_cont=contenedor_elemento.find('imagen').text,
+                            cpu_cont=contenedor_elemento.find('recursos/cpu').text,
+                            ram_cont=contenedor_elemento.find('recursos/ram').text,
+                            puerto=contenedor_elemento.find('puerto').text
+                        )
+                        nuevo_mv.lista_contenedores.insertar(nuevo_contenedor)
 
                 self.maquinas_virtuales.insertar(nuevo_mv)
-                print(f"Maquina virtual '{mv_id}' procesadas")
+                print(f"Máquina virtual '{mv_id}' cargada")
 
             except Exception as e:
-                print(f"Error al procesar las MV: {e}")
-    
-    def leer_solicitudes(self, lista_elementos):
-        if lista_elementos is None:
-            print("ERROR: lista_elementos es None")
+                print(f"Error al cargar una máquina virtual: {e}")
 
+    def leer_solicitudes(self, lista_elementos):
         solicitudes_encontradas = lista_elementos.findall('solicitud')
 
         for elemento in solicitudes_encontradas:
             try:
-                solicitud_id = elemento.get('id')
-                solicitud_centro = elemento.find('cliente').text
-                solicitud_tipo = elemento.find('tipo').text
-                solicitud_prioridad = elemento.find('prioridad').text
-
-                solicitud_recursos = elemento.find('recursos')
-                solicitud_cpu = solicitud_recursos.find('cpu').text
-                solicitud_ram = solicitud_recursos.find('ram').text
-                solicitud_almacenamiento = solicitud_recursos.find('almacenamiento').text
-
-                solicitud_tiempo = elemento.find('tiempoEstimado').text
-
                 nueva_solicitud = solicitud(
-                    id_solic = solicitud_id,
-                    cliente = solicitud_centro,
-                    tipo_solic = solicitud_tipo,
-                    prioridad = solicitud_prioridad,
-                    cpu_solic = solicitud_cpu,
-                    ram_solic = solicitud_ram,
-                    almacenamiento_solic = solicitud_almacenamiento,
-                    tiempo_solic = solicitud_tiempo
+                    id_solic=elemento.get('id'),
+                    cliente=elemento.find('cliente').text,
+                    tipo_solic=elemento.find('tipo').text,
+                    prioridad=elemento.find('prioridad').text,
+                    cpu_solic=elemento.find('recursos/cpu').text,
+                    ram_solic=elemento.find('recursos/ram').text,
+                    almacenamiento_solic=elemento.find('recursos/almacenamiento').text,
+                    tiempo_solic=elemento.find('tiempoEstimado').text
                 )
+
                 self.solicitudes.insertar(nueva_solicitud)
-                print(f"Solicitudes '{solicitud_id}' procesadas")
+                print(f"Solicitud '{nueva_solicitud.id_solic}' registrada")
 
             except Exception as e:
-                print(f"Error al procesar las solicitudes: {e}")
+                print(f"No se pudo cargar una solicitud: {e}")
 
     def leer_instrucciones(self, lista_elementos):
-        if lista_elementos is None:
-            print("ERROR: lista_elementos es None")
-
         instrucciones_encontradas = lista_elementos.findall('instruccion')
 
         for elemento in instrucciones_encontradas:
@@ -221,51 +163,39 @@ class xml_lector:
                 instruccion_tipo = elemento.get('tipo')
 
                 if instruccion_tipo == 'crearVM':
-                    instruccion_id = elemento.find('id').text
-                    instruccion_centro = elemento.find('centro').text
-                    instruccion_os = elemento.find('so').text
-                    instruccion_cpu = elemento.find('cpu').text
-                    instruccion_ram = elemento.find('ram').text
-                    instruccion_almacenamiento = elemento.find('almacenamiento').text
-
-                    nueva_instruccion = crear_vm (
-                        tipo_inst = 'crearVM',
-                        id_inst = instruccion_id,
-                        centro_inst = instruccion_centro,
-                        so_inst = instruccion_os,
-                        cpu_inst = instruccion_cpu,
-                        ram_inst = instruccion_ram,
-                        almacenamiento_inst = instruccion_almacenamiento
+                    nueva_instruccion = crear_vm(
+                        tipo_inst='crearVM',
+                        id_inst=elemento.find('id').text,
+                        centro_inst=elemento.find('centro').text,
+                        so_inst=elemento.find('so').text,
+                        cpu_inst=elemento.find('cpu').text,
+                        ram_inst=elemento.find('ram').text,
+                        almacenamiento_inst=elemento.find('almacenamiento').text
                     )
                     self.instrucciones.insertar(nueva_instruccion)
-                    print(f"Instruccion '{instruccion_tipo}'")
+                    print("Instrucción para crear VM agregada")
 
                 elif instruccion_tipo == 'migrarVM':
-                    instruccion_vm = elemento.find('vmId').text
-                    instruccion_origen = elemento.find('centroOrigen').text
-                    instruccion_destino = elemento.find('centroDestino').text
-
-                    nueva_instruccion = migrar_vm (
-                        id_tipo = 'migrarVM',
-                        vm_inst = instruccion_vm,
-                        centro_dest = instruccion_destino,
-                        centro_orig = instruccion_origen,
+                    nueva_instruccion = migrar_vm(
+                        id_tipo='migrarVM',
+                        vm_inst=elemento.find('vmId').text,
+                        centro_dest=elemento.find('centroDestino').text,
+                        centro_orig=elemento.find('centroOrigen').text,
                     )
                     self.instrucciones.insertar(nueva_instruccion)
-                    print(f"Instruccion '{instruccion_tipo}'")
+                    print("Instrucción para migrar VM agregada")
 
                 elif instruccion_tipo == 'procesarSolicitudes':
-                    instruccion_cantidad = elemento.find('cantidad').text
-
-                    nueva_instruccion = procesar (
-                        id_pros = 'procesarSolicitudes',
-                        cantidad_pros = instruccion_cantidad
+                    cantidad = elemento.find('cantidad').text
+                    nueva_instruccion = procesar(
+                        id_pros='procesarSolicitudes',
+                        cantidad_pros=cantidad
                     )
                     self.instrucciones.insertar(nueva_instruccion)
-                    print(f"Instrucciones a procesar {instruccion_cantidad}")
+                    print(f"Se procesarán {cantidad} solicitudes")
 
             except Exception as e:
-                print(f"Error al procesar instrucciones: {e}")
+                print(f"Error al leer una instrucción: {e}")
 
 
     
