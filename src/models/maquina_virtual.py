@@ -43,3 +43,11 @@ class maquina_virtual:
         self.lista_contenedores.insertar(nuevo_contenedor)
         self.cpu_usada += int(nuevo_contenedor.cpu_cont)
         self.ram_usada += int(nuevo_contenedor.ram_cont)
+        
+    def buscar_contenedor(self, id_cont):
+        actual = self.lista_contenedores.primero
+        while actual:
+            if actual.dato.id_cont == id_cont:
+                return actual.dato
+            actual = actual.siguiente
+        return None
