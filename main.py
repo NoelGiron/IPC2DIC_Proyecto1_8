@@ -38,7 +38,7 @@ def main():
                 eleccionCN(gestor_cloudsync.maquinas_virtuales)
                 
             elif opcion == "5":
-                eleccionS()
+                eleccionS(gestor_cloudsync.solicitudes)
                 
             elif opcion == "6":
                 print("General XML Salida")

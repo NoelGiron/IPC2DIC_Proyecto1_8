@@ -182,3 +182,28 @@ class lista_enlazada:
 
         print("No se encontró la máquina virtual.")
         return False
+    
+    def insertarOrdenadoPrioridad(self, solicitud):
+        nuevo = nodo(solicitud)
+
+        if self.primero is None:
+            self.primero = nuevo
+            self.size += 1
+            return
+
+        if int(solicitud.prioridad) > int(self.primero.dato.prioridad):
+            nuevo.siguiente = self.primero
+            self.primero = nuevo
+            self.size += 1
+            return
+
+        actual = self.primero
+        while (
+            actual.siguiente is not None and
+            int(actual.siguiente.dato.prioridad) >= int(solicitud.prioridad)
+        ):
+            actual = actual.siguiente
+
+        nuevo.siguiente = actual.siguiente
+        actual.siguiente = nuevo
+        self.size += 1

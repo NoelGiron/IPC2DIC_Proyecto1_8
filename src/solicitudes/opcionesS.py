@@ -1,3 +1,5 @@
+from ..solicitudes.vercolaS import verColaSolicitudes
+
 def opcionesS():
     print("\n--------Gestión de máquinas virtuales-----------")
     print("1) Agregar nueva solicitud")
@@ -7,7 +9,7 @@ def opcionesS():
     print("5) Volver al menu principal")
 
 
-def eleccionS():
+def eleccionS(listaSolicitudes):
     while True:
         opcionesS()
 
@@ -22,7 +24,7 @@ def eleccionS():
                 print("Procesar N solicitudes")
 
             elif opcion == "4":
-                print("Ver cola de solicitudes")
+                verColaSolicitudes(listaSolicitudes)
                 
             elif opcion == "5":
                 break
