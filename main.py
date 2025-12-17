@@ -1,4 +1,5 @@
 from src.utils.xml_lector import xml_lector
+from src.utils.xml_salida import generar_xml_salida
 from src.dataCenter.choice import eleccionCD
 from src.virtualMachine.opcinesMV import eleccionMV
 from src.container.choiceContainer import eleccionCN
@@ -41,7 +42,11 @@ def main():
                 eleccionS(gestor_cloudsync.solicitudes)
                 
             elif opcion == "6":
-                print("General XML Salida")
+                ruta = generar_xml_salida(
+                    gestor_cloudsync.centros,
+                    gestor_cloudsync.maquinas_virtuales
+                )
+                print(f"XML de salida generado en: {ruta}")
                 
             elif opcion == "7":
                 print("\n¡Hasta luego!")
